@@ -20,8 +20,8 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/admin" element={<AdminRoute />} />
-          <Route path="/admin/*" element={<AdminRoute />} />
+          <Route path="/sasti-admin-786" element={<AdminRoute />} />
+          <Route path="/sasti-admin-786/*" element={<AdminRoute />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

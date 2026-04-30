@@ -13,6 +13,15 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/components/ProductCard";
 
+const DELIVERY_CHARGES = 350;
+
+const parsePkrPrice = (value: string) => {
+  const numeric = Number(value.replace(/[^0-9.]/g, ""));
+  return Number.isFinite(numeric) ? numeric : 0;
+};
+
+const formatPkr = (amount: number) => `PKR ${amount.toLocaleString("en-PK")}`;
+
 const schema = z.object({
   name: z.string().trim().min(2, "Name is too short").max(100),
   whatsapp: z
@@ -34,6 +43,8 @@ interface Props {
 export const CheckoutDialog = ({ open, onOpenChange, product, summary }: Props) => {
   const [form, setForm] = useState({ name: "", whatsapp: "", address: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const productPrice = product ? parsePkrPrice(product.price) : 0;
+  const grandTotal = productPrice + DELIVERY_CHARGES;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,6 +75,23 @@ export const CheckoutDialog = ({ open, onOpenChange, product, summary }: Props) 
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+          {product && (
+            <div className="rounded-md border border-border bg-muted/30 p-3 text-sm space-y-1.5">
+              <p className="font-medium text-foreground">Price Summary</p>
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">Product Price</span>
+                <span>{formatPkr(productPrice)}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">Delivery Charges (350 PKR)</span>
+                <span>{formatPkr(DELIVERY_CHARGES)}</span>
+              </div>
+              <div className="flex items-center justify-between border-t border-border pt-1.5">
+                <span className="font-semibold">Grand Total</span>
+                <span className="font-semibold text-brand">{formatPkr(grandTotal)}</span>
+              </div>
+            </div>
+          )}
           <div className="space-y-1.5">
             <Label htmlFor="name">Full Name</Label>
             <Input

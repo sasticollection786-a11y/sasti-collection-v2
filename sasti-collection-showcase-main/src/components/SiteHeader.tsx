@@ -1,7 +1,6 @@
 import { Search, ShoppingBag, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
-import { Link } from "react-router-dom";
 
 const categories = [
   { label: "Swiss Lawn", href: "#swiss-lawn" },
@@ -13,6 +12,9 @@ export const SiteHeader = () => {
   const { count, setOpen: setCartOpen } = useCart();
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-md">
+      <div className="border-b border-border/60 bg-background/95 px-6 py-1.5 text-center text-xs text-muted-foreground">
+        WhatsApp for orders: <span className="font-medium text-foreground">03049116786</span>
+      </div>
       <nav className="container mx-auto flex items-center justify-between px-6 py-5">
         <div className="flex items-center gap-10">
           <a href="/" className="font-serif text-xl md:text-2xl font-bold tracking-tight text-brand">
@@ -30,9 +32,6 @@ export const SiteHeader = () => {
           <button aria-label="Search" className="text-foreground/80 hover:text-brand transition-colors">
             <Search className="h-5 w-5" />
           </button>
-          <Link to="/admin" className="text-xs font-medium text-muted-foreground hover:text-brand transition-colors">
-            Admin
-          </Link>
           <button
             aria-label="Cart"
             onClick={() => setCartOpen(true)}
