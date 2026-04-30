@@ -5,9 +5,20 @@ import { useCart } from "@/context/CartContext";
 import { CheckoutDialog } from "@/components/CheckoutDialog";
 import { Trash2 } from "lucide-react";
 
+const DELIVERY_CHARGES = 350;
+
+const parsePkrPrice = (value: string) => {
+  const numeric = Number(value.replace(/[^0-9.]/g, ""));
+  return Number.isFinite(numeric) ? numeric : 0;
+};
+
+const formatPkr = (amount: number) => `PKR ${amount.toLocaleString("en-PK")}`;
+
 export const CartSheet = () => {
   const { items, isOpen, setOpen, remove, count, clear } = useCart();
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const subtotal = items.reduce((sum, item) => sum + parsePkrPrice(item.price) * item.qty, 0);
+  const grandTotal = subtotal + DELIVERY_CHARGES;
 
   return (
     <>
@@ -56,6 +67,23 @@ export const CartSheet = () => {
 
           {items.length > 0 && (
             <div className="border-t border-border pt-4 space-y-3">
+              <div className="rounded-md border border-border bg-muted/30 p-3 space-y-1.5 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Subtotal</span>
+                  <span className="font-medium">{formatPkr(subtotal)}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Delivery Charges (350)</span>
+                  <span className="font-medium">{formatPkr(DELIVERY_CHARGES)}</span>
+                </div>
+                <div className="flex items-center justify-between border-t border-border pt-1.5">
+                  <span className="font-semibold">Grand Total</span>
+                  <span className="font-semibold text-brand">{formatPkr(grandTotal)}</span>
+                </div>
+              </div>
+              <p className="text-sm font-bold text-red-600">
+                Sirf wahi log order karein jo delivery charges advance de sakte hain
+              </p>
               <Button
                 className="w-full bg-brand text-brand-foreground hover:bg-brand/90"
                 onClick={() => setCheckoutOpen(true)}
