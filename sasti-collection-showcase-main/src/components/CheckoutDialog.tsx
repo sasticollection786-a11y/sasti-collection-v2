@@ -172,3 +172,4 @@ export const CheckoutDialog = ({ open, onOpenChange, product, summary }: Props) 
     </Dialog>
   );
 };
+
