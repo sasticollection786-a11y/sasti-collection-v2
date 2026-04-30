@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
+import emailjs from "@emailjs/browser";
 import {
   Dialog,
   DialogContent,
@@ -59,24 +60,35 @@ export const CheckoutDialog = ({ open, onOpenChange, product, summary }: Props) 
     }
     setErrors({});
 
+    const templateParams = {
+      name: form.name,
+      whatsapp: form.whatsapp,
+      address: form.address,
+      product: product ? product.name : "N/A",
+      total: formatPkr(grandTotal),
+    };
+
     try {
       // Sasti Collection Final URL
-      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyfpGRUnKkRlDU7n59KExf6I1mMdw35ekZ-PSiMZP-qIxJvQZfbuo2AhJ1O-GTE-93i/exec";
+      const SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbyfpGRUnKkRlDU7n59KExf6I1mMdw35ekZ-PSiMZP-qIxJvQZfbuo2AhJ1O-GTE-93i/exec";
 
       await fetch(SCRIPT_URL, {
         method: "POST",
-        mode: "no-cors", 
+        mode: "no-cors",
         headers: {
           "Content-Type": "text/plain;charset=utf-8",
         },
-        body: JSON.stringify({
-          name: form.name,
-          whatsapp: form.whatsapp,
-          address: form.address,
-          product: product ? product.name : "N/A",
-          total: formatPkr(grandTotal)
-        }),
+        body: JSON.stringify(templateParams),
       });
+
+      // EmailJS integration
+      await emailjs.send(
+        "service_dasru7o",
+        "template_gc7thpj",
+        templateParams,
+        { publicKey: "1JDsQvS9J-MAcl7Kr" }
+      );
 
       toast.success("Order placed", {
         description: `Thank you, ${result.data.name}. We'll confirm on WhatsApp shortly.`,
@@ -92,68 +104,67 @@ export const CheckoutDialog = ({ open, onOpenChange, product, summary }: Props) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="font-serif text-2xl">Complete your order</DialogTitle>
+          <DialogTitle>Complete your order</DialogTitle>
           <DialogDescription>
             {product ? `${product.name} • ${product.price}` : summary || "Confirm your details below."}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+
+        <form onSubmit={handleSubmit} className="space-y-4">
           {product && (
-            <div className="rounded-md border border-border bg-muted/30 p-3 text-sm space-y-1.5">
-              <p className="font-medium text-foreground">Price Summary</p>
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Product Price</span>
+            <div className="rounded-lg border bg-muted/40 p-4 space-y-2">
+              <h4 className="font-semibold text-sm">Price Summary</h4>
+              <div className="flex justify-between text-sm">
+                <span>Product Price</span>
                 <span>{formatPkr(productPrice)}</span>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Delivery Charges (350 PKR)</span>
+              <div className="flex justify-between text-sm">
+                <span>Delivery Charges (350 PKR)</span>
                 <span>{formatPkr(DELIVERY_CHARGES)}</span>
               </div>
-              <div className="flex items-center justify-between border-t border-border pt-1.5">
-                <span className="font-semibold">Grand Total</span>
-                <span className="font-semibold text-brand">{formatPkr(grandTotal)}</span>
+              <div className="flex justify-between font-semibold pt-2 border-t">
+                <span>Grand Total</span>
+                <span>{formatPkr(grandTotal)}</span>
               </div>
             </div>
           )}
+
           <div className="space-y-1.5">
             <Label htmlFor="name">Full Name</Label>
             <Input
               id="name"
-              maxLength={100}
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               placeholder="Your name"
             />
             {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
           </div>
+
           <div className="space-y-1.5">
             <Label htmlFor="whatsapp">WhatsApp Number</Label>
             <Input
               id="whatsapp"
-              maxLength={20}
               value={form.whatsapp}
               onChange={(e) => setForm({ ...form, whatsapp: e.target.value })}
               placeholder="+92 300 1234567"
             />
             {errors.whatsapp && <p className="text-xs text-destructive">{errors.whatsapp}</p>}
           </div>
+
           <div className="space-y-1.5">
             <Label htmlFor="address">Delivery Address</Label>
             <Input
               id="address"
-              maxLength={300}
               value={form.address}
               onChange={(e) => setForm({ ...form, address: e.target.value })}
               placeholder="Street, city, postal code"
             />
             {errors.address && <p className="text-xs text-destructive">{errors.address}</p>}
           </div>
-          <Button
-            type="submit"
-            className="w-full bg-brand text-brand-foreground hover:bg-brand/90"
-          >
+
+          <Button type="submit" className="w-full">
             Place Order
           </Button>
         </form>
