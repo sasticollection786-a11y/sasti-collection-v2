@@ -1,0 +1,4 @@
+[build]
+  base = "sasti-collection-showcase-main"
+  publish = "dist"
+  command = "npm run build"
