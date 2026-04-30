@@ -60,8 +60,8 @@ export const CheckoutDialog = ({ open, onOpenChange, product, summary }: Props) 
     setErrors({});
 
     try {
-      // UPDATED URL: Naya Deployment Link yahan dal diya gaya hai
-      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx5AhjJ8xTQuN2hmiq8r83Ikj6GoZ52q5eswj81hZB15EFiHENdnJ6EKIEiwZU6MgQr/exec";
+      // FINAL DEPLOYED URL
+      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyfpGRUnKkRlDU7n59KExf6I1mMdw35ekZ-PSiMZP-qIxJvQZfbuo2AhJ1O-GTE-93i/exec";
 
       await fetch(SCRIPT_URL, {
         method: "POST",
