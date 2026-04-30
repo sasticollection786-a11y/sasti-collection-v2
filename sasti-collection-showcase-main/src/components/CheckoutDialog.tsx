@@ -60,12 +60,12 @@ export const CheckoutDialog = ({ open, onOpenChange, product, summary }: Props) 
     setErrors({});
 
     try {
-      // FIX: Cleaned up the broken/repeated URL
-      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPLGx3xBnk2Pgajh5rqPoKvwTLnsJN7c5XjjhImY65RjeR15_9UPJpwzrqISA_8Fx0/exec";
+      // UPDATED URL: Naya Deployment Link yahan dal diya gaya hai
+      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx5AhjJ8xTQuN2hmiq8r83Ikj6GoZ52q5eswj81hZB15EFiHENdnJ6EKIEiwZU6MgQr/exec";
 
       await fetch(SCRIPT_URL, {
         method: "POST",
-        mode: "no-cors", // Zaruri hai taake CORS error na aaye
+        mode: "no-cors", 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: form.name,
