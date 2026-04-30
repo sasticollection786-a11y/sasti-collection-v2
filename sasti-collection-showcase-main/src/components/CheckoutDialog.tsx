@@ -60,8 +60,10 @@ export const CheckoutDialog = ({ open, onOpenChange, product, summary }: Props) 
     setErrors({});
 
     try {
-      // Google Sheet URL Integration
-      await fetch("https://script.google.com/macros/s/AKfycbxPLGx3xBnk2Pgajhttps://script.google.com/macros/s/AKfycbxPLGx3xBnk2Pgajh5rqPoKvwTLnsJN7c5XjjhImY65RjeR15_9UPJpwzrqISA_8Fx0/exech5rqPoKvwTLnsJN7c5XjjhImY65RjeR15_9UPJpwzrqISA_8Fx0/exec", {
+      // FIX: Cleaned up the broken/repeated URL
+      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPLGx3xBnk2Pgajh5rqPoKvwTLnsJN7c5XjjhImY65RjeR15_9UPJpwzrqISA_8Fx0/exec";
+
+      await fetch(SCRIPT_URL, {
         method: "POST",
         mode: "no-cors", // Zaruri hai taake CORS error na aaye
         headers: { "Content-Type": "application/json" },
